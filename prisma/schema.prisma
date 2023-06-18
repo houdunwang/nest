@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Config {
+  id   Int  @id @default(autoincrement())
+  data Json @db.Json
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  name          String
+  password      String
+  email         String?
+  mobile        String?
+  avatar        String?
+  nickname      String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  comments      Comment[]
+  tokens        Token[]
+  notifications Notification[]
+  secret        Secret?
+  // codes         Code[]
+}
+
+model Soft {
+  id          Int       @id @default(autoincrement())
+  title       String
+  name        String
+  pro         Boolean   @default(true)
+  version     String    @default("1.0.0")
+  description String
+  content     String    @db.Text
+  preview     String
+  download    String?
+  github      String?
+  gitee       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  comments    Comment[]
+  tokens      Token[]
+}
+
+//软件密钥
+model Secret {
+  id                         Int       @id @default(autoincrement())
+  secret                     String
+  endTime                    DateTime
+  userId                     Int       @unique
+  user                       User      @relation(fields: [userId], references: [id])
+  //后盾人订阅更新时间
+  houdunrenSubscribeUpdateAt DateTime?
+  //后盾人用户users表id
+  houdunrenUserId            Int?
+  //后盾人订阅subscribe表id
+  houdunrenSubscribeId       Int?
+}
+
+//口令用于直播间发放，用户使用口令来生成密钥
+model Code {
+  id        Int      @id @default(autoincrement())
+  code      String
+  isUse     Boolean  @default(false)
+  // userId    Int?
+  // user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//软件使用验证TOKEN
+model Token {
+  id        Int      @id @default(autoincrement())
+  token     String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  softId    Int
+  soft      Soft     @relation(fields: [softId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id            Int            @id @default(autoincrement())
+  content       String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  //用户关联
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        Int
+  //软件关联
+  soft          Soft           @relation(fields: [softId], references: [id], onDelete: Cascade)
+  softId        Int
+  //回复评论
+  commentId     Int?
+  //回复的评论
+  comment       Comment?       @relation("reply", fields: [commentId], references: [id], onDelete: Cascade)
+  //评论的回复列表
+  replys        Comment[]      @relation("reply")
+  //通知
+  notifications Notification[]
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  isRead    Boolean  @default(false)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commentId Int
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

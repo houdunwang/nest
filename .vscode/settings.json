@@ -1,0 +1,22 @@
+{
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "tsconfig.json": "tsconfig.*.json,README.md,*.json,*.js,.gitignore,.prettierrc,*.cjs,LICENSE,*.html,.env"
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "dist": true,
+    ".vscode": true,
+    "test": true,
+    "vue/core": true,
+    "vue/public": true,
+    "vue/.vscode": true,
+    "uploads": true,
+    "vue_dist": true
+  }
+}

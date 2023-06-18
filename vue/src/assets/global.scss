@@ -1,0 +1,21 @@
+body {
+  @apply bg-[#F5F4F8] text-gray-700 font-sans text-base;
+
+  a {
+    // @apply text-teal-700;
+    &:hover {
+      @apply text-[#16a085] duration-300;
+    }
+  }
+}
+.el-form-item__error {
+  @apply hidden;
+}
+
+.hd-error {
+  @apply rounded-sm bg-[#e74c3c] text-white py-1 px-2 text-xs mt-1 opacity-60  font-bold flex items-center gap-1;
+}
+
+.el-backtop:hover {
+  background-color: transparent !important;
+}
